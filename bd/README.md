@@ -6,7 +6,7 @@ Su propósito es dejar explícito que el proyecto está compuesto por tres compo
 
 - `frontend`
 - `backend`
-- `bd`
+- `bd` 
 
 ## Contenido
 
