@@ -199,13 +199,13 @@ function App() {
             <input
               value={itemForm.name}
               onChange={(event) => setItemForm({ ...itemForm, name: event.target.value })}
-              placeholder="Nombre del producto ADS"
+              placeholder="Nombre del producto Sencillo"
               required
             />
             <input
               value={itemForm.category}
               onChange={(event) => setItemForm({ ...itemForm, category: event.target.value })}
-              placeholder="Categoria SENCILLAS"
+              placeholder="Categoria FACILES"
               required
             />
             <input

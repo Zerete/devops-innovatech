@@ -38,9 +38,13 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --targets "Key=tag:Name,Values=ec2-web,ec2-app" \
+            --targets "Key=tag:Name,Values=ec2-web" \
             --parameters 'commands=[
               "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
               "cd /home/ec2-user/devops && docker-compose pull",
-              "docker-compose up -d"
+              "docker-compose up -d",
+              "sleep 5",
+              "docker exec -u root frontend_innovatech sh -c \"sed -i 's/localhost/34.205.139.91/g' /usr/share/nginx/html/assets/*.js\"",
+              "docker exec backend_innovatech sh -c \"find . -type f -name '"'*.js'"' -exec sed -i '"'s|http://localhost:5173|*|g'"' {} +\"",
+              "docker restart backend_innovatech"
             ]'
