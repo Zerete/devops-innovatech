@@ -19,6 +19,9 @@ services:
       - "3001:3001"
     environment:
       DB_HOST: bd
+      DB_PASSWORD: admin123 
+      DB_USER: root          
+      DB_NAME: innovatech_ops
     depends_on:
       - bd
     networks:
