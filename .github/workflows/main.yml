@@ -3,6 +3,7 @@ name: CI/CD Pipeline Innovatech
 on:
   push:
     branches: [ "deploy" ] 
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -34,17 +35,10 @@ jobs:
           docker build -t $ECR_REGISTRY/innovatech-frontend:latest ./frontend
           docker push $ECR_REGISTRY/innovatech-frontend:latest
 
-      - name: Deploy to EC2 via SSM
+      - name: Deploy to Amazon ECS
         run: |
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --targets "Key=tag:Name,Values=ec2-web" \
-            --parameters 'commands=[
-              "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
-              "cd /home/ec2-user/devops && docker-compose pull",
-              "docker-compose up -d",
-              "sleep 5",
-              "docker exec -u root frontend_innovatech sh -c \"sed -i 's/localhost/34.205.139.91/g' /usr/share/nginx/html/assets/*.js\"",
-              "docker exec backend_innovatech sh -c \"find . -type f -name '"'*.js'"' -exec sed -i '"'s|http://localhost:5173|*|g'"' {} +\"",
-              "docker restart backend_innovatech"
-            ]'
+          aws ecs update-service \
+            --cluster ${{ secrets.ECS_CLUSTER_NAME }} \
+            --service ${{ secrets.ECS_SERVICE_NAME }} \
+            --force-new-deployment \
+            --region us-east-1
