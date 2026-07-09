@@ -1,29 +1,16 @@
 version: '3.8'
 services:
-  bd:
-    image: mysql:8.0
-    container_name: bd_innovatech
-    restart: always
-    environment:
-      MYSQL_DATABASE: innovatech_ops
-      MYSQL_ROOT_PASSWORD: admin123
-    volumes:
-      - db_data:/var/lib/mysql 
-    networks:
-      - red_devops
-
+ 
   backend:
     build: ./backend
     container_name: backend_innovatech
     ports:
       - "3001:3001"
     environment:
-      DB_HOST: bd
+      DB_HOST: endpoint_rds_aqui
       DB_PASSWORD: admin123 
       DB_USER: root          
       DB_NAME: innovatech_ops
-    depends_on:
-      - bd
     networks:
       - red_devops
 
@@ -38,6 +25,4 @@ services:
 networks:
   red_devops:
     driver: bridge
-
-volumes:
-  db_data: 
+    
