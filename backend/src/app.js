@@ -19,6 +19,43 @@ app.get("/health", async (_request, response) => {
   }
 });
 
+app.get("/api/crear-tablas", async (_request, response) => {
+  try {
+  
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS inventory_items (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        category VARCHAR(255),
+        stock INT DEFAULT 0,
+        location VARCHAR(255),
+        minimum_stock INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+    
+    
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS support_tickets (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        priority VARCHAR(50),
+        status VARCHAR(50),
+        related_item_id INT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (related_item_id) REFERENCES inventory_items(id)
+      )
+    `);
+
+    response.json({ status: "exito", mensaje: "¡Tablas creadas mágicamente en RDS!" });
+  } catch (error) {
+    response.status(500).json({ error: error.message });
+  }
+});
+
 app.get("/api/dashboard", async (_request, response, next) => {
   try {
     const [[itemTotals]] = await pool.query(
