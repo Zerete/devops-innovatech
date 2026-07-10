@@ -6,9 +6,8 @@ import { pool } from "./db.js";
 dotenv.config();
 
 const app = express();
-const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
-app.use(cors({ origin: corsOrigin }));
+app.use(cors());
 app.use(express.json());
 
 app.get("/health", async (_request, response) => {
