@@ -166,7 +166,7 @@ function App() {
     <main className="page">
       <section className="hero">
         <div>
-          <p className="eyebrow">Innovatech Chile SANTIAGO</p>
+          <p className="eyebrow">Innovatech Chile SANTIAGO PRUEBA</p>
           <h1>Inventory Desk</h1>
           <p className="subtitle">
             Panel interno para inventario y tickets de soporte.
